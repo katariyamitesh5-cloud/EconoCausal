@@ -1,0 +1,11 @@
+fastapi==0.116.1
+uvicorn==0.35.0
+numpy==2.3.2
+pandas==2.3.2
+scikit-learn==1.7.1
+matplotlib==3.10.5
+plotly==6.3.0
+scipy==1.16.1
+econml==0.16.0
+dowhy==0.13
+python-dotenv==1.1.1
