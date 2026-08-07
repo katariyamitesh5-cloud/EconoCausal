@@ -1,12 +1,14 @@
 from fastapi import FastAPI
+from app.config import settings
 
 app = FastAPI(
-    title="EconoCausal API",
-    version="1.0.0"
+    title=settings.APP_NAME,
+    version=settings.VERSION
 )
 
 @app.get("/")
 def home():
     return {
+        "status": "success",
         "message": "Welcome to EconoCausal API"
     }
