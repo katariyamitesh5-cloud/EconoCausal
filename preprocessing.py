@@ -1,4 +1,5 @@
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 # Load dataset
 df = pd.read_csv("data/dataset.csv")
@@ -20,29 +21,20 @@ for col in numeric_cols:
 
 for col in categorical_cols:
     if df[col].isnull().sum() > 0:
-        df[col] = df[col].fillna(
-            df[col].mode()[0]
-        )
+        df[col] = df[col].fillna(df[col].mode()[0])
 
 print("Missing values handled.")
 
-# Remove duplicate records
-duplicates = df.duplicated().sum()
-print("Duplicates found:", duplicates)
-
+# Remove duplicates
 df = df.drop_duplicates()
 
-print("Duplicates removed.")
+print("Duplicate records removed.")
 
-# Find categorical columns
+# Encode categorical features
 categorical_cols = df.select_dtypes(
     include=["object"]
 ).columns
 
-print("Categorical columns:")
-print(list(categorical_cols))
-
-# Encode categorical features
 df = pd.get_dummies(
     df,
     columns=categorical_cols,
@@ -51,11 +43,24 @@ df = pd.get_dummies(
 
 print("Categorical features encoded.")
 
-# Save processed dataset
+# Normalize numerical features
+numeric_cols = df.select_dtypes(
+    include=["int64", "float64"]
+).columns
+
+scaler = StandardScaler()
+
+df[numeric_cols] = scaler.fit_transform(
+    df[numeric_cols]
+)
+
+print("Numerical features normalized.")
+
+# Save final dataset
 df.to_csv(
     "data/preprocessed.csv",
     index=False
 )
 
-print("New shape:", df.shape)
-print("Encoding completed successfully!")
+print("Final shape:", df.shape)
+print("Preprocessing completed successfully!")
