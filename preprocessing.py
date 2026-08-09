@@ -4,54 +4,6 @@ import pandas as pd
 df = pd.read_csv("data/dataset.csv")
 
 print("Dataset loaded")
-print("Shape:", df.shape)
-
-# Check missing values
-print("\nMissing values before:")
-print(df.isnull().sum())
-
-# Find numerical and categorical columns
-numeric_cols = df.select_dtypes(
-    include=["int64", "float64"]
-).columns
-
-categorical_cols = df.select_dtypes(
-    include=["object"]
-).columns
-
-# Fill numerical missing values
-for col in numeric_cols:
-    if df[col].isnull().sum() > 0:
-        df[col] = df[col].fillna(
-            df[col].median()
-        )
-
-# Fill categorical missing values
-for col in categorical_cols:
-    if df[col].isnull().sum() > 0:
-        df[col] = df[col].fillna(
-            df[col].mode()[0]
-        )
-
-# Check missing values after
-print("\nMissing values after:")
-print(df.isnull().sum())
-
-# Save processed dataset
-df.to_csv(
-    "data/preprocessed.csv",
-    index=False
-)
-
-print("\nMissing values handled successfully
-!")
-
-import pandas as pd
-
-# Load dataset
-df = pd.read_csv("data/dataset.csv")
-
-print("Dataset loaded")
 print("Original shape:", df.shape)
 
 # Handle missing values
@@ -68,22 +20,36 @@ for col in numeric_cols:
 
 for col in categorical_cols:
     if df[col].isnull().sum() > 0:
-        df[col] = df[col].fillna(df[col].mode()[0])
+        df[col] = df[col].fillna(
+            df[col].mode()[0]
+        )
 
 print("Missing values handled.")
 
-# Check duplicate records
+# Remove duplicate records
 duplicates = df.duplicated().sum()
+print("Duplicates found:", duplicates)
 
-print("Duplicate records found:", duplicates)
-
-# Remove duplicates
 df = df.drop_duplicates()
 
-print("Duplicates after removal:",
-      df.duplicated().sum())
+print("Duplicates removed.")
 
-print("New shape:", df.shape)
+# Find categorical columns
+categorical_cols = df.select_dtypes(
+    include=["object"]
+).columns
+
+print("Categorical columns:")
+print(list(categorical_cols))
+
+# Encode categorical features
+df = pd.get_dummies(
+    df,
+    columns=categorical_cols,
+    drop_first=True
+)
+
+print("Categorical features encoded.")
 
 # Save processed dataset
 df.to_csv(
@@ -91,4 +57,5 @@ df.to_csv(
     index=False
 )
 
-print("Duplicate records removed successfully!")
+print("New shape:", df.shape)
+print("Encoding completed successfully!")
