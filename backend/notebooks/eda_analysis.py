@@ -9,38 +9,52 @@ def load_dataset():
     return pd.read_csv(DATA_PATH)
 
 
-def plot_age_distribution(df):
-    plt.figure(figsize=(8, 5))
+def create_correlation_matrix(df):
+    numeric_columns = [
+        "age",
+        "income",
+        "previous_purchases",
+        "discount",
+        "purchase_status"
+    ]
 
-    plt.hist(df["age"], bins=15)
+    correlation = df[numeric_columns].corr()
 
-    plt.title("Customer Age Distribution")
-    plt.xlabel("Age")
-    plt.ylabel("Number of Customers")
+    print("\nCorrelation Matrix:")
+    print(correlation)
+
+    plt.figure(figsize=(8, 6))
+
+    plt.imshow(correlation, interpolation="nearest")
+
+    plt.colorbar()
+
+    plt.xticks(
+        range(len(numeric_columns)),
+        numeric_columns,
+        rotation=45,
+        ha="right"
+    )
+
+    plt.yticks(
+        range(len(numeric_columns)),
+        numeric_columns
+    )
+
+    plt.title("Feature Correlation Matrix")
 
     plt.tight_layout()
-    plt.savefig("backend/notebooks/age_distribution.png")
-    plt.close()
 
+    plt.savefig(
+        "backend/notebooks/correlation_matrix.png"
+    )
 
-def plot_income_distribution(df):
-    plt.figure(figsize=(8, 5))
-
-    plt.hist(df["income"], bins=20)
-
-    plt.title("Customer Income Distribution")
-    plt.xlabel("Income")
-    plt.ylabel("Number of Customers")
-
-    plt.tight_layout()
-    plt.savefig("backend/notebooks/income_distribution.png")
     plt.close()
 
 
 if __name__ == "__main__":
     df = load_dataset()
 
-    plot_age_distribution(df)
-    plot_income_distribution(df)
+    create_correlation_matrix(df)
 
-    print("Customer distribution plots created successfully.")
+    print("Correlation analysis completed successfully.")
