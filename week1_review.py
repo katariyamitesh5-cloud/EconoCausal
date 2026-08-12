@@ -1,40 +1,44 @@
-import os
+import importlib
 
-print("WEEK 1 PROJECT REVIEW")
+print("WEEK 1 LIBRARY REVIEW")
 print("=" * 30)
 
-# Main project files
-files = [
-    "README.md",
-    "requirements.txt",
-    "preprocessing.py",
-    "causal_graph.py"
+# Required libraries
+libraries = [
+    "pandas",
+    "numpy",
+    "sklearn",
+    "matplotlib",
+    "seaborn",
+    "dowhy"
 ]
 
-print("\nChecking project files:")
+print("\nChecking required libraries:")
 
-for file in files:
-    if os.path.exists(file):
-        print("[OK]", file)
-    else:
-        print("[MISSING]", file)
+installed = []
+missing = []
 
-# Check data folder
-print("\nChecking data folder:")
+for library in libraries:
 
-if os.path.exists("data"):
-    print("[OK] data folder")
+    try:
+        importlib.import_module(library)
+        installed.append(library)
+        print("[OK]", library)
 
-    for file in os.listdir("data"):
-        print(" -", file)
+    except ImportError:
+        missing.append(library)
+        print("[MISSING]", library)
+
+print("\nLibrary Summary")
+print("-" * 20)
+
+print("Installed:", len(installed))
+print("Missing:", len(missing))
+
+if missing:
+    print("\nInstall missing libraries using:")
+    print("pip install " + " ".join(missing))
 else:
-    print("[MISSING] data folder")
+    print("\nAll required libraries are installed.")
 
-# Check Python files
-print("\nPython files:")
-
-for file in os.listdir("."):
-    if file.endswith(".py"):
-        print(" -", file)
-
-print("\nProject structure review completed.")
+print("\nLibrary review completed.")
