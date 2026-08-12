@@ -1,44 +1,51 @@
-import importlib
+import os
+import pandas as pd
 
-print("WEEK 1 LIBRARY REVIEW")
+print("WEEK 1 DATA REVIEW")
 print("=" * 30)
 
-# Required libraries
-libraries = [
-    "pandas",
-    "numpy",
-    "sklearn",
-    "matplotlib",
-    "seaborn",
-    "dowhy"
-]
+dataset_path = "data/preprocessed.csv"
 
-print("\nChecking required libraries:")
+# Check dataset
+if os.path.exists(dataset_path):
 
-installed = []
-missing = []
+    print("[OK] Preprocessed dataset found")
 
-for library in libraries:
+    df = pd.read_csv(dataset_path)
 
-    try:
-        importlib.import_module(library)
-        installed.append(library)
-        print("[OK]", library)
+    print("\nDataset Information")
+    print("-" * 20)
 
-    except ImportError:
-        missing.append(library)
-        print("[MISSING]", library)
+    print("Rows:", df.shape[0])
+    print("Columns:", df.shape[1])
 
-print("\nLibrary Summary")
-print("-" * 20)
+    # Missing values
+    missing = df.isnull().sum().sum()
 
-print("Installed:", len(installed))
-print("Missing:", len(missing))
+    print("Missing values:", missing)
 
-if missing:
-    print("\nInstall missing libraries using:")
-    print("pip install " + " ".join(missing))
+    # Duplicate records
+    duplicates = df.duplicated().sum()
+
+    print("Duplicate records:", duplicates)
+
+    # Data types
+    print("\nData Types:")
+    print(df.dtypes)
+
+    # Basic statistics
+    print("\nBasic Statistics:")
+    print(df.describe())
+
+    if missing == 0:
+        print("\n[OK] No missing values")
+
+    if duplicates == 0:
+        print("[OK] No duplicate records")
+
 else:
-    print("\nAll required libraries are installed.")
 
-print("\nLibrary review completed.")
+    print("[MISSING] Preprocessed dataset")
+    print("Expected:", dataset_path)
+
+print("\nDataset review completed.")
