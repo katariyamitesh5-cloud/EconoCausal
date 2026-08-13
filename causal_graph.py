@@ -1,78 +1,56 @@
 import pandas as pd
+from dowhy import CausalModel
 
 # Load dataset
 df = pd.read_csv("data/preprocessed.csv")
 
-print("Dataset loaded successfully")
-print("Dataset shape:", df.shape)
+print("Dataset loaded")
+print("Shape:", df.shape)
 
-# Display columns
-print("\nAvailable columns:")
-for column in df.columns:
-    print("-", column)
+# Define causal variables
+treatment = "discount"
+outcome = "sales"
 
-# -------------------------------
-# Identify Treatment
-# -------------------------------
-
-treatment_keywords = [
-    "treatment", "treat", "policy",
-    "intervention", "exposure"
+# Confounding variables
+confounders = [
+    "age",
+    "gender",
+    "income",
+    "previous_purchases"
 ]
 
-treatment_columns = []
+print("Treatment:", treatment)
+print("Outcome:", outcome)
+print("Confounders:", confounders)
 
-for column in df.columns:
-    name = column.lower()
+# Create DoWhy causal model
+model = CausalModel(
+    data=df,
+    treatment=treatment,
+    outcome=outcome,
+    common_causes=confounders
+)
 
-    for keyword in treatment_keywords:
-        if keyword in name:
-            treatment_columns.append(column)
-            break
+print("\nDoWhy model created successfully!")
 
-if treatment_columns:
-    treatment = treatment_columns[0]
-else:
-    treatment = None
+# Identify causal effect
+identified_effect = model.identify_effect(
+    proceed_when_unidentifiable=True
+)
 
-print("\nTreatment:", treatment)
+print("\nIdentified causal effect:")
+print(identified_effect)
 
-# -------------------------------
-# Identify Outcome
-# -------------------------------
-
-outcome_keywords = [
-    "outcome", "result", "target",
-    "effect", "response"
-]
-
-outcome_columns = []
-
-for column in df.columns:
-    name = column.lower()
-
-    for keyword in outcome_keywords:
-        if keyword in name:
-            outcome_columns.append(column)
-            break
-
-print("\nPossible outcome variables:")
-
-for column in outcome_columns:
-    print("-", column)
-
-if outcome_columns:
-    outcome = outcome_columns[0]
-else:
-    outcome = None
-
-print("\nSelected Outcome:", outcome)
-
-# Save information
+# Save causal information
 with open("causal_variables.txt", "w") as file:
-    file.write("Causal Variable Identification\n")
-    file.write("-----------------------------\n")
+    file.write("EconoCausal Causal Model\n")
+    file.write("========================\n")
     file.write(f"Treatment: {treatment}\n")
     file.write(f"Outcome: {outcome}\n")
 
-print("\nTreatment and outcome identification completed.")
+    file.write("\nConfounders:\n")
+
+    for variable in confounders:
+        file.write(f"- {variable}\n")
+
+print("\nCausal graph implementation completed!")
