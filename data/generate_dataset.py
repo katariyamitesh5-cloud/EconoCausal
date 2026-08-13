@@ -15,14 +15,11 @@ def generate_retail_dataset(n_samples=1000, random_state=42):
     )
 
     income = np.random.normal(
-        loc=50000,
-        scale=15000,
-        size=n_samples
+        50000, 15000, n_samples
     ).clip(15000, 120000).round(2)
 
     previous_purchases = np.random.poisson(
-        lam=5,
-        size=n_samples
+        5, n_samples
     ).clip(0, 20)
 
     discount = np.random.choice(
@@ -30,13 +27,33 @@ def generate_retail_dataset(n_samples=1000, random_state=42):
         size=n_samples
     )
 
+    # Generate sales using customer features
+    base_sales = (
+        50
+        + income * 0.0005
+        + previous_purchases * 8
+    )
+
+    discount_effect = discount * 2.5
+
+    noise = np.random.normal(
+        0, 10, n_samples
+    )
+
+    sales = (
+        base_sales
+        + discount_effect
+        + noise
+    ).clip(10).round(2)
+
     data = pd.DataFrame({
         "customer_id": customer_id,
         "age": age,
         "gender": gender,
         "income": income,
         "previous_purchases": previous_purchases,
-        "discount": discount
+        "discount": discount,
+        "sales": sales
     })
 
     return data
@@ -46,6 +63,9 @@ if __name__ == "__main__":
     df = generate_retail_dataset()
 
     print("Dataset generated successfully!")
-    print(f"Rows: {len(df)}")
-    print(f"Columns: {len(df.columns)}")
+    print("Rows:", len(df))
+    print("Columns:", len(df.columns))
+    print("\nColumns:")
+    print(df.columns.tolist())
+    print("\nSample data:")
     print(df.head())
