@@ -2,12 +2,19 @@ import numpy as np
 import pandas as pd
 
 
-def generate_retail_dataset(n_samples=1000, random_state=42):
+def generate_retail_dataset(
+    n_samples=1000,
+    random_state=42
+):
     np.random.seed(random_state)
 
-    customer_id = np.arange(10001, 10001 + n_samples)
+    customer_id = np.arange(
+        10001, 10001 + n_samples
+    )
 
-    age = np.random.randint(18, 65, n_samples)
+    age = np.random.randint(
+        18, 65, n_samples
+    )
 
     gender = np.random.choice(
         ["Male", "Female"],
@@ -27,7 +34,6 @@ def generate_retail_dataset(n_samples=1000, random_state=42):
         size=n_samples
     )
 
-    # Generate sales using customer features
     base_sales = (
         50
         + income * 0.0005
@@ -51,7 +57,8 @@ def generate_retail_dataset(n_samples=1000, random_state=42):
         "age": age,
         "gender": gender,
         "income": income,
-        "previous_purchases": previous_purchases,
+        "previous_purchases":
+            previous_purchases,
         "discount": discount,
         "sales": sales
     })
@@ -60,12 +67,16 @@ def generate_retail_dataset(n_samples=1000, random_state=42):
 
 
 if __name__ == "__main__":
+
     df = generate_retail_dataset()
+
+    df.to_csv(
+        "data/retail_dataset.csv",
+        index=False
+    )
 
     print("Dataset generated successfully!")
     print("Rows:", len(df))
     print("Columns:", len(df.columns))
-    print("\nColumns:")
-    print(df.columns.tolist())
-    print("\nSample data:")
+    print("Saved: data/retail_dataset.csv")
     print(df.head())
