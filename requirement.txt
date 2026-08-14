@@ -7,5 +7,5 @@ matplotlib==3.10.5
 plotly==6.3.0
 scipy==1.16.1
 econml==0.16.0
-dowhy==0.13
+dowhy==0.14
 python-dotenv==1.1.1
