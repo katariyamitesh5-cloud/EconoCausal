@@ -1,29 +1,24 @@
 import pandas as pd
 from dowhy import CausalModel
 
-# Load dataset
+# Load preprocessed dataset
 df = pd.read_csv("data/preprocessed.csv")
 
-print("Dataset loaded")
-print("Shape:", df.shape)
+print("Dataset loaded:", df.shape)
 
-# Define causal variables
+# Treatment and outcome
 treatment = "discount"
 outcome = "sales"
 
-# Confounding variables
+# Confounders
 confounders = [
     "age",
-    "gender",
     "income",
-    "previous_purchases"
+    "previous_purchases",
+    "gender_Male"
 ]
 
-print("Treatment:", treatment)
-print("Outcome:", outcome)
-print("Confounders:", confounders)
-
-# Create DoWhy causal model
+# Create causal model
 model = CausalModel(
     data=df,
     treatment=treatment,
@@ -31,7 +26,7 @@ model = CausalModel(
     common_causes=confounders
 )
 
-print("\nDoWhy model created successfully!")
+print("DoWhy model created successfully!")
 
 # Identify causal effect
 identified_effect = model.identify_effect(
@@ -45,12 +40,11 @@ print(identified_effect)
 with open("causal_variables.txt", "w") as file:
     file.write("EconoCausal Causal Model\n")
     file.write("========================\n")
-    file.write(f"Treatment: {treatment}\n")
-    file.write(f"Outcome: {outcome}\n")
-
+    file.write("Treatment: discount\n")
+    file.write("Outcome: sales\n")
     file.write("\nConfounders:\n")
 
     for variable in confounders:
         file.write(f"- {variable}\n")
 
-print("\nCausal graph implementation completed!")
+print("\nCausal graph completed!")
