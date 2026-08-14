@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
 # Load dataset
-df = pd.read_csv("data/dataset.csv")
+df = pd.read_csv("data/retail_dataset.csv")
 
 print("Dataset loaded")
 print("Original shape:", df.shape)
