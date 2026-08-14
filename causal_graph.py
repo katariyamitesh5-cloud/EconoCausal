@@ -17,7 +17,6 @@ confounders = [
     "previous_purchases",
     "gender_Male"
 ]
-
 # Create causal model
 model = CausalModel(
     data=df,
