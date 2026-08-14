@@ -1,0 +1,10 @@
+EconoCausal Causal Model
+========================
+Treatment: discount
+Outcome: sales
+
+Confounders:
+- age
+- gender_Male
+- income
+- previous_purchases
