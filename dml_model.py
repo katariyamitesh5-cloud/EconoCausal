@@ -41,7 +41,7 @@ model = LinearDML(
 model.fit(Y_train, T_train, X=X_train)
 
 # Estimate treatment effect
-effect = model.effect(X_test)
+effect = model.effect(X)
 
 print("\nDML Model trained successfully!")
 print("Average Treatment Effect:", effect.mean())
