@@ -21,17 +21,21 @@ if len(customers) != len(effects):
 customers["treatment_effect"] = effects["treatment_effect"]
 
 # Create pricing recommendation
-def recommend_discount(effect):
-    if effect >= 0.80:
+def recommend_discount(effect, current_discount):
+    if effect >= 0.80 and current_discount < 20:
         return "High Discount"
-    elif effect >= 0.70:
+    elif effect >= 0.70 and current_discount < 15:
         return "Medium Discount"
     else:
         return "Low Discount"
 
 
-customers["recommendation"] = customers["treatment_effect"].apply(
-    recommend_discount
+customers["recommendation"] = customers.apply(
+    lambda row: recommend_discount(
+        row["treatment_effect"],
+        row["discount"]
+    ),
+    axis=1
 )
 
 # Save recommendations
