@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 import pandas as pd
 
 from App.config import settings
@@ -16,10 +17,7 @@ recommendations = pd.read_csv(
 
 @app.get("/")
 def home():
-    return {
-        "status": "success",
-        "message": "Welcome to EconoCausal API"
-    }
+    return FileResponse("App/index.html")
 
 
 @app.get("/health")
