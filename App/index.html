@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EconoCausal - Dynamic Pricing</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        input {
+            flex: 1;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 13px 22px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            background: #222;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .result {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .box {
+            background: #f7f7f7;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .box h3 {
+            margin-top: 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .box p {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+
+        .recommendation {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            background: #eee;
+        }
+
+        .recommendation h2 {
+            margin: 0;
+        }
+
+        .error {
+            color: #b00020;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 700px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>EconoCausal</h1>
+        <p>Dynamic Pricing via Double Machine Learning</p>
+    </div>
+
+    <div class="card">
+
+        <div class="search">
+            <input
+                type="number"
+                id="customerId"
+                placeholder="Enter Customer ID e.g. 10001"
+            >
+
+            <button onclick="getRecommendation()">
+                Get Recommendation
+            </button>
+        </div>
+
+        <div id="error" class="error"></div>
+
+        <div id="result" class="result">
+
+            <div class="grid">
+
+                <div class="box">
+                    <h3>Customer ID</h3>
+                    <p id="customer"></p>
+                </div>
+
+                <div class="box">
+                    <h3>Current Discount</h3>
+                    <p id="discount"></p>
+                </div>
+
+                <div class="box">
+                    <h3>Treatment Effect</h3>
+                    <p id="effect"></p>
+                </div>
+
+            </div>
+
+            <div class="recommendation">
+                <h3>Recommended Pricing Strategy</h3>
+                <h2 id="recommendation"></h2>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+async function getRecommendation() {
+
+    const customerId =
+        document.getElementById("customerId").value;
+
+    const error =
+        document.getElementById("error");
+
+    const result =
+        document.getElementById("result");
+
+    if (!customerId) {
+        error.textContent = "Please enter a customer ID.";
+        result.style.display = "none";
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `/recommendation/${customerId}`
+        );
+
+        const data = await response.json();
+
+        if (data.status === "error") {
+            error.textContent = data.message;
+            result.style.display = "none";
+            return;
+        }
+
+        error.textContent = "";
+
+        document.getElementById("customer").textContent =
+            data.customer_id;
+
+        document.getElementById("discount").textContent =
+            data.current_discount + "%";
+
+        document.getElementById("effect").textContent =
+            Number(data.treatment_effect).toFixed(4);
+
+        document.getElementById("recommendation").textContent =
+            data.recommendation;
+
+        result.style.display = "block";
+
+    } catch (err) {
+
+        error.textContent =
+            "Unable to connect to the API.";
+
+        result.style.display = "none";
+    }
+}
+
+</script>
+
+</body>
+</html>
