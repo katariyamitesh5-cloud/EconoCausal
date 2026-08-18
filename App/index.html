@@ -18,8 +18,8 @@
         }
 
         .container {
-            max-width: 900px;
-            margin: 50px auto;
+            max-width: 1000px;
+            margin: 40px auto;
             padding: 20px;
         }
 
@@ -43,6 +43,51 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
+        /* Analytics */
+        .analytics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .analytics-box {
+            background: #f7f7f7;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .analytics-box h3 {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .analytics-box p {
+            font-size: 26px;
+            font-weight: bold;
+            margin: 10px 0 0;
+        }
+
+        /* Recommendation Summary */
+        .recommendation-summary {
+            background: #f7f7f7;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .recommendation-summary h3 {
+            margin-top: 0;
+        }
+
+        .recommendation-summary p {
+            display: inline-block;
+            margin-right: 30px;
+        }
+
+        /* Search */
         .search {
             display: flex;
             gap: 10px;
@@ -71,6 +116,7 @@
             opacity: 0.85;
         }
 
+        /* Customer Result */
         .result {
             display: none;
             margin-top: 20px;
@@ -118,12 +164,18 @@
         }
 
         @media (max-width: 700px) {
+            .analytics,
             .grid {
                 grid-template-columns: 1fr;
             }
 
             .search {
                 flex-direction: column;
+            }
+
+            .recommendation-summary p {
+                display: block;
+                margin-right: 0;
             }
         }
     </style>
@@ -140,7 +192,51 @@
 
     <div class="card">
 
+        <!-- Analytics -->
+        <div class="analytics">
+
+            <div class="analytics-box">
+                <h3>Total Customers</h3>
+                <p id="totalCustomers">-</p>
+            </div>
+
+            <div class="analytics-box">
+                <h3>Average Treatment Effect</h3>
+                <p id="avgEffect">-</p>
+            </div>
+
+            <div class="analytics-box">
+                <h3>Average Discount</h3>
+                <p id="avgDiscount">-</p>
+            </div>
+
+        </div>
+
+        <!-- Recommendation Summary -->
+        <div class="recommendation-summary">
+
+            <h3>Recommendation Summary</h3>
+
+            <p>
+                Low Discount:
+                <strong id="lowDiscount">-</strong>
+            </p>
+
+            <p>
+                Medium Discount:
+                <strong id="mediumDiscount">-</strong>
+            </p>
+
+            <p>
+                High Discount:
+                <strong id="highDiscount">-</strong>
+            </p>
+
+        </div>
+
+        <!-- Customer Search -->
         <div class="search">
+
             <input
                 type="number"
                 id="customerId"
@@ -150,10 +246,12 @@
             <button onclick="getRecommendation()">
                 Get Recommendation
             </button>
+
         </div>
 
         <div id="error" class="error"></div>
 
+        <!-- Customer Result -->
         <div id="result" class="result">
 
             <div class="grid">
@@ -176,8 +274,11 @@
             </div>
 
             <div class="recommendation">
+
                 <h3>Recommended Pricing Strategy</h3>
+
                 <h2 id="recommendation"></h2>
+
             </div>
 
         </div>
@@ -187,6 +288,44 @@
 </div>
 
 <script>
+
+/* Load Analytics */
+
+async function loadAnalytics() {
+
+    try {
+
+        const response = await fetch("/analytics");
+
+        const data = await response.json();
+
+        document.getElementById("totalCustomers").textContent =
+            data.total_customers;
+
+        document.getElementById("avgEffect").textContent =
+            Number(data.average_treatment_effect).toFixed(4);
+
+        document.getElementById("avgDiscount").textContent =
+            Number(data.average_discount).toFixed(2) + "%";
+
+        document.getElementById("lowDiscount").textContent =
+            data.recommendations["Low Discount"] || 0;
+
+        document.getElementById("mediumDiscount").textContent =
+            data.recommendations["Medium Discount"] || 0;
+
+        document.getElementById("highDiscount").textContent =
+            data.recommendations["High Discount"] || 0;
+
+    } catch (error) {
+
+        console.error("Analytics loading failed:", error);
+
+    }
+}
+
+
+/* Customer Recommendation */
 
 async function getRecommendation() {
 
@@ -200,8 +339,12 @@ async function getRecommendation() {
         document.getElementById("result");
 
     if (!customerId) {
-        error.textContent = "Please enter a customer ID.";
+
+        error.textContent =
+            "Please enter a customer ID.";
+
         result.style.display = "none";
+
         return;
     }
 
@@ -214,8 +357,11 @@ async function getRecommendation() {
         const data = await response.json();
 
         if (data.status === "error") {
+
             error.textContent = data.message;
+
             result.style.display = "none";
+
             return;
         }
 
@@ -243,6 +389,11 @@ async function getRecommendation() {
         result.style.display = "none";
     }
 }
+
+
+/* Start Analytics */
+
+loadAnalytics();
 
 </script>
 

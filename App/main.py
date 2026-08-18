@@ -48,3 +48,34 @@ def get_recommendation(customer_id: int):
         "treatment_effect": float(row["treatment_effect"]),
         "recommendation": row["recommendation"]
     }
+
+
+@app.get("/analytics")
+def get_analytics():
+
+    total_customers = len(recommendations)
+
+    average_treatment_effect = recommendations[
+        "treatment_effect"
+    ].mean()
+
+    average_discount = recommendations[
+        "discount"
+    ].mean()
+
+    recommendation_counts = (
+        recommendations["recommendation"]
+        .value_counts()
+        .to_dict()
+    )
+
+    return {
+        "total_customers": int(total_customers),
+        "average_treatment_effect": round(
+            float(average_treatment_effect), 4
+        ),
+        "average_discount": round(
+            float(average_discount), 2
+        ),
+        "recommendations": recommendation_counts
+    }
