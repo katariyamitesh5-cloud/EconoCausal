@@ -40,10 +40,8 @@
             background: white;
             padding: 30px;
             border-radius: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
-
-        /* Analytics Cards */
 
         .analytics {
             display: grid;
@@ -60,18 +58,16 @@
         }
 
         .analytics-box h3 {
-            margin: 0;
-            color: #666;
+            margin: 0 0 10px;
             font-size: 14px;
+            color: #666;
         }
 
         .analytics-box p {
-            font-size: 26px;
+            margin: 0;
+            font-size: 25px;
             font-weight: bold;
-            margin: 10px 0 0;
         }
-
-        /* Recommendation Summary */
 
         .recommendation-summary {
             background: #f7f7f7;
@@ -83,49 +79,6 @@
         .recommendation-summary h3 {
             margin-top: 0;
         }
-
-        .recommendation-summary p {
-            display: inline-block;
-            margin-right: 30px;
-        }
-
-        /* Recommendation Chart */
-
-        .chart-section {
-            background: #f7f7f7;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-        }
-
-        .chart-section h3 {
-            margin-top: 0;
-        }
-
-        .chart-bar {
-            display: grid;
-            grid-template-columns: 140px 1fr 60px;
-            align-items: center;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .bar {
-            height: 18px;
-            background: #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .fill {
-            height: 100%;
-            width: 0%;
-            background: #222;
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-
-        /* Search */
 
         .search {
             display: flex;
@@ -155,8 +108,6 @@
             opacity: 0.85;
         }
 
-        /* Customer Result */
-
         .result {
             display: none;
             margin-top: 20px;
@@ -164,7 +115,7 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 15px;
         }
 
@@ -181,21 +132,26 @@
         }
 
         .box p {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             margin-bottom: 0;
         }
 
         .recommendation {
             margin-top: 20px;
-            padding: 20px;
+            padding: 25px;
             border-radius: 10px;
             text-align: center;
             background: #eee;
         }
 
         .recommendation h2 {
-            margin: 0;
+            margin: 10px 0;
+        }
+
+        .recommended-discount {
+            font-size: 20px;
+            font-weight: bold;
         }
 
         .error {
@@ -203,27 +159,23 @@
             margin-top: 15px;
         }
 
-        /* Mobile */
+        @media (max-width: 800px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
 
-        @media (max-width: 700px) {
+            .analytics {
+                grid-template-columns: 1fr;
+            }
+        }
 
-            .analytics,
+        @media (max-width: 500px) {
             .grid {
                 grid-template-columns: 1fr;
             }
 
             .search {
                 flex-direction: column;
-            }
-
-            .recommendation-summary p {
-                display: block;
-                margin-right: 0;
-            }
-
-            .chart-bar {
-                grid-template-columns: 1fr;
-                gap: 5px;
             }
         }
     </style>
@@ -241,7 +193,6 @@
     <div class="card">
 
         <!-- Analytics -->
-
         <div class="analytics">
 
             <div class="analytics-box">
@@ -261,9 +212,7 @@
 
         </div>
 
-
         <!-- Recommendation Summary -->
-
         <div class="recommendation-summary">
 
             <h3>Recommendation Summary</h3>
@@ -285,56 +234,7 @@
 
         </div>
 
-
-        <!-- Recommendation Distribution Chart -->
-
-        <div class="chart-section">
-
-            <h3>Recommendation Distribution</h3>
-
-            <div class="chart-bar">
-
-                <span>Low Discount</span>
-
-                <div class="bar">
-                    <div id="lowBar" class="fill"></div>
-                </div>
-
-                <strong id="lowPercent">0%</strong>
-
-            </div>
-
-
-            <div class="chart-bar">
-
-                <span>Medium Discount</span>
-
-                <div class="bar">
-                    <div id="mediumBar" class="fill"></div>
-                </div>
-
-                <strong id="mediumPercent">0%</strong>
-
-            </div>
-
-
-            <div class="chart-bar">
-
-                <span>High Discount</span>
-
-                <div class="bar">
-                    <div id="highBar" class="fill"></div>
-                </div>
-
-                <strong id="highPercent">0%</strong>
-
-            </div>
-
-        </div>
-
-
         <!-- Customer Search -->
-
         <div class="search">
 
             <input
@@ -349,12 +249,9 @@
 
         </div>
 
-
         <div id="error" class="error"></div>
 
-
         <!-- Customer Result -->
-
         <div id="result" class="result">
 
             <div class="grid">
@@ -365,8 +262,33 @@
                 </div>
 
                 <div class="box">
+                    <h3>Age</h3>
+                    <p id="age"></p>
+                </div>
+
+                <div class="box">
+                    <h3>Gender</h3>
+                    <p id="gender"></p>
+                </div>
+
+                <div class="box">
+                    <h3>Income</h3>
+                    <p id="income"></p>
+                </div>
+
+                <div class="box">
+                    <h3>Previous Purchases</h3>
+                    <p id="purchases"></p>
+                </div>
+
+                <div class="box">
                     <h3>Current Discount</h3>
                     <p id="discount"></p>
+                </div>
+
+                <div class="box">
+                    <h3>Sales</h3>
+                    <p id="sales"></p>
                 </div>
 
                 <div class="box">
@@ -376,12 +298,16 @@
 
             </div>
 
-
             <div class="recommendation">
 
                 <h3>Recommended Pricing Strategy</h3>
 
                 <h2 id="recommendation"></h2>
+
+                <p class="recommended-discount">
+                    Recommended Discount:
+                    <span id="recommendedDiscount"></span>
+                </p>
 
             </div>
 
@@ -391,23 +317,14 @@
 
 </div>
 
-
 <script>
-
-/* =========================================
-   LOAD ANALYTICS
-========================================= */
 
 async function loadAnalytics() {
 
     try {
 
         const response = await fetch("/analytics");
-
         const data = await response.json();
-
-
-        /* Basic Analytics */
 
         document.getElementById("totalCustomers").textContent =
             data.total_customers;
@@ -418,85 +335,22 @@ async function loadAnalytics() {
         document.getElementById("avgDiscount").textContent =
             Number(data.average_discount).toFixed(2) + "%";
 
-
-        /* Recommendation Counts */
-
-        const low =
+        document.getElementById("lowDiscount").textContent =
             data.recommendations["Low Discount"] || 0;
 
-        const medium =
+        document.getElementById("mediumDiscount").textContent =
             data.recommendations["Medium Discount"] || 0;
 
-        const high =
+        document.getElementById("highDiscount").textContent =
             data.recommendations["High Discount"] || 0;
 
+    } catch (err) {
 
-        /* Display Counts */
-
-        document.getElementById("lowDiscount").textContent =
-            low;
-
-        document.getElementById("mediumDiscount").textContent =
-            medium;
-
-        document.getElementById("highDiscount").textContent =
-            high;
-
-
-        /* Calculate Percentages */
-
-        const total =
-            low + medium + high;
-
-        const lowPercent =
-            total ? (low / total) * 100 : 0;
-
-        const mediumPercent =
-            total ? (medium / total) * 100 : 0;
-
-        const highPercent =
-            total ? (high / total) * 100 : 0;
-
-
-        /* Update Chart Bars */
-
-        document.getElementById("lowBar").style.width =
-            lowPercent + "%";
-
-        document.getElementById("mediumBar").style.width =
-            mediumPercent + "%";
-
-        document.getElementById("highBar").style.width =
-            highPercent + "%";
-
-
-        /* Update Percentages */
-
-        document.getElementById("lowPercent").textContent =
-            lowPercent.toFixed(1) + "%";
-
-        document.getElementById("mediumPercent").textContent =
-            mediumPercent.toFixed(1) + "%";
-
-        document.getElementById("highPercent").textContent =
-            highPercent.toFixed(1) + "%";
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Analytics loading failed:",
-            error
-        );
+        console.error("Analytics loading failed:", err);
 
     }
 }
 
-
-/* =========================================
-   CUSTOMER RECOMMENDATION
-========================================= */
 
 async function getRecommendation() {
 
@@ -509,18 +363,15 @@ async function getRecommendation() {
     const result =
         document.getElementById("result");
 
-
     if (!customerId) {
 
         error.textContent =
             "Please enter a customer ID.";
 
-        result.style.display =
-            "none";
+        result.style.display = "none";
 
         return;
     }
-
 
     try {
 
@@ -528,30 +379,39 @@ async function getRecommendation() {
             `/recommendation/${customerId}`
         );
 
-        const data =
-            await response.json();
-
+        const data = await response.json();
 
         if (data.status === "error") {
 
-            error.textContent =
-                data.message;
+            error.textContent = data.message;
 
-            result.style.display =
-                "none";
+            result.style.display = "none";
 
             return;
         }
 
-
         error.textContent = "";
-
 
         document.getElementById("customer").textContent =
             data.customer_id;
 
+        document.getElementById("age").textContent =
+            data.age;
+
+        document.getElementById("gender").textContent =
+            data.gender;
+
+        document.getElementById("income").textContent =
+            "$" + Number(data.income).toFixed(2);
+
+        document.getElementById("purchases").textContent =
+            data.previous_purchases;
+
         document.getElementById("discount").textContent =
             data.current_discount + "%";
+
+        document.getElementById("sales").textContent =
+            "$" + Number(data.sales).toFixed(2);
 
         document.getElementById("effect").textContent =
             Number(data.treatment_effect).toFixed(4);
@@ -559,27 +419,20 @@ async function getRecommendation() {
         document.getElementById("recommendation").textContent =
             data.recommendation;
 
+        document.getElementById("recommendedDiscount").textContent =
+            data.recommended_discount + "%";
 
-        result.style.display =
-            "block";
+        result.style.display = "block";
 
-    }
-
-    catch (err) {
+    } catch (err) {
 
         error.textContent =
             "Unable to connect to the API.";
 
-        result.style.display =
-            "none";
-
+        result.style.display = "none";
     }
 }
 
-
-/* =========================================
-   START ANALYTICS
-========================================= */
 
 loadAnalytics();
 
