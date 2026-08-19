@@ -9,7 +9,6 @@ app = FastAPI(
     version=settings.VERSION
 )
 
-# Load pricing recommendations
 recommendations = pd.read_csv(
     "data/pricing_recommendations.csv"
 )
@@ -42,11 +41,25 @@ def get_recommendation(customer_id: int):
 
     row = customer.iloc[0]
 
+    current_discount = float(row["discount"])
+    treatment_effect = float(row["treatment_effect"])
+    recommendation = str(row["recommendation"])
+
+    if recommendation == "Low Discount":
+        recommended_discount = 10
+    elif recommendation == "Medium Discount":
+        recommended_discount = 15
+    elif recommendation == "High Discount":
+        recommended_discount = 25
+    else:
+        recommended_discount = current_discount
+
     return {
         "customer_id": int(row["customer_id"]),
-        "current_discount": float(row["discount"]),
-        "treatment_effect": float(row["treatment_effect"]),
-        "recommendation": row["recommendation"]
+        "current_discount": current_discount,
+        "treatment_effect": treatment_effect,
+        "recommendation": recommendation,
+        "recommended_discount": recommended_discount
     }
 
 
