@@ -3,179 +3,412 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EconoCausal - Dynamic Pricing</title>
+
+    <title>EconoCausal | Dynamic Pricing</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         * {
             box-sizing: border-box;
         }
 
+        :root {
+            --bg: #f5f7fb;
+            --card: #ffffff;
+            --text: #172033;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --danger: #dc2626;
+            --shadow: 0 10px 30px rgba(15, 23, 42, 0.07);
+        }
+
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            color: #222;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
         }
 
         .container {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+            padding: 35px 22px 50px;
         }
 
         .header {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 30px;
         }
 
-        .header h1 {
-            margin-bottom: 8px;
+        .brand h1 {
+            margin: 0;
+            font-size: 32px;
         }
 
-        .header p {
-            color: #666;
+        .brand p {
+            margin: 7px 0 0;
+            color: var(--muted);
         }
 
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 14px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        .badge {
+            background: #eff6ff;
+            color: var(--primary);
+            padding: 9px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
         }
+
+        .main-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        /* KPI */
 
         .analytics {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 18px;
+            margin-bottom: 30px;
         }
 
         .analytics-box {
-            background: #f7f7f7;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
+            background: #fafbff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px;
         }
 
         .analytics-box h3 {
-            margin: 0 0 10px;
-            font-size: 14px;
-            color: #666;
+            margin: 0 0 12px;
+            font-size: 13px;
+            color: var(--muted);
         }
 
         .analytics-box p {
             margin: 0;
-            font-size: 25px;
+            font-size: 29px;
             font-weight: bold;
         }
 
-        .recommendation-summary {
-            background: #f7f7f7;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
+        .analytics-box small {
+            display: block;
+            margin-top: 7px;
+            color: var(--muted);
         }
 
-        .recommendation-summary h3 {
-            margin-top: 0;
+        /* Section */
+
+        .section-title {
+            margin-bottom: 16px;
+        }
+
+        .section-title h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .section-title p {
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* Summary */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .summary-box {
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+        }
+
+        .summary-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .summary-name {
+            font-weight: 600;
+        }
+
+        .summary-number {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .progress {
+            width: 100%;
+            height: 7px;
+            background: #eef0f4;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+        }
+
+        .summary-box small {
+            display: block;
+            margin-top: 8px;
+            color: var(--muted);
+        }
+
+        /* Charts */
+
+        .charts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            min-height: 350px;
+        }
+
+        .chart-card.full {
+            grid-column: 1 / -1;
+        }
+
+        .chart-card h3 {
+            margin: 0 0 5px;
+            font-size: 17px;
+        }
+
+        .chart-card p {
+            margin: 0 0 15px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .chart-container {
+            height: 260px;
+            position: relative;
+        }
+
+        /* Search */
+
+        .search-section {
+            padding: 22px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: #fafbff;
+            margin-bottom: 20px;
+        }
+
+        .search-title {
+            margin: 0 0 5px;
+            font-size: 18px;
+        }
+
+        .search-subtitle {
+            margin: 0 0 17px;
+            color: var(--muted);
+            font-size: 13px;
         }
 
         .search {
             display: flex;
             gap: 10px;
-            margin-bottom: 25px;
         }
 
         input {
             flex: 1;
-            padding: 13px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
         }
 
         button {
-            padding: 13px 22px;
+            padding: 14px 22px;
             border: none;
-            border-radius: 8px;
+            border-radius: 9px;
             cursor: pointer;
-            font-size: 16px;
-            background: #222;
+            background: var(--primary);
             color: white;
+            font-size: 15px;
+            font-weight: bold;
+            min-width: 175px;
         }
 
         button:hover {
-            opacity: 0.85;
+            background: var(--primary-dark);
         }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Error */
+
+        .error {
+            display: none;
+            color: var(--danger);
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        /* Customer */
 
         .result {
             display: none;
-            margin-top: 20px;
+            margin-top: 25px;
+        }
+
+        .customer-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .customer-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .customer-header span {
+            color: var(--muted);
+            font-size: 13px;
         }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            gap: 14px;
         }
 
         .box {
-            background: #f7f7f7;
-            padding: 20px;
-            border-radius: 10px;
+            background: #fafbff;
+            border: 1px solid var(--border);
+            padding: 18px;
+            border-radius: 12px;
         }
 
         .box h3 {
-            margin-top: 0;
-            font-size: 14px;
-            color: #666;
+            margin: 0 0 9px;
+            font-size: 12px;
+            color: var(--muted);
         }
 
         .box p {
-            font-size: 20px;
+            margin: 0;
+            font-size: 18px;
             font-weight: bold;
-            margin-bottom: 0;
         }
+
+        /* Recommendation */
 
         .recommendation {
             margin-top: 20px;
-            padding: 25px;
-            border-radius: 10px;
+            padding: 28px;
+            border-radius: 14px;
             text-align: center;
-            background: #eee;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+        }
+
+        .recommendation h3 {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            text-transform: uppercase;
         }
 
         .recommendation h2 {
             margin: 10px 0;
+            font-size: 27px;
+            color: var(--primary-dark);
         }
 
         .recommended-discount {
-            font-size: 20px;
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .recommended-discount span {
+            font-size: 23px;
             font-weight: bold;
+            color: var(--primary-dark);
         }
 
-        .error {
-            color: #b00020;
-            margin-top: 15px;
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--muted);
+            font-size: 12px;
         }
 
-        @media (max-width: 800px) {
+        @media (max-width: 900px) {
+            .analytics,
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
             .grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .analytics {
+            .charts {
                 grid-template-columns: 1fr;
+            }
+
+            .chart-card.full {
+                grid-column: auto;
             }
         }
 
-        @media (max-width: 500px) {
+        @media (max-width: 550px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
             .grid {
                 grid-template-columns: 1fr;
             }
 
             .search {
                 flex-direction: column;
+            }
+
+            button {
+                width: 100%;
             }
         }
     </style>
@@ -186,73 +419,207 @@
 <div class="container">
 
     <div class="header">
-        <h1>EconoCausal</h1>
-        <p>Dynamic Pricing via Double Machine Learning</p>
+        <div class="brand">
+            <h1>EconoCausal</h1>
+            <p>Dynamic Pricing via Double Machine Learning</p>
+        </div>
+
+        <div class="badge">
+            Causal AI Pricing Engine
+        </div>
     </div>
 
-    <div class="card">
 
-        <!-- Analytics -->
+    <div class="main-card">
+
+        <!-- KPI -->
+
         <div class="analytics">
 
             <div class="analytics-box">
                 <h3>Total Customers</h3>
                 <p id="totalCustomers">-</p>
+                <small>Customers analyzed</small>
             </div>
 
             <div class="analytics-box">
                 <h3>Average Treatment Effect</h3>
                 <p id="avgEffect">-</p>
+                <small>Estimated causal effect</small>
             </div>
 
             <div class="analytics-box">
                 <h3>Average Discount</h3>
                 <p id="avgDiscount">-</p>
+                <small>Across all customers</small>
             </div>
 
         </div>
 
-        <!-- Recommendation Summary -->
-        <div class="recommendation-summary">
 
-            <h3>Recommendation Summary</h3>
+        <!-- Summary -->
 
-            <p>
-                Low Discount:
-                <strong id="lowDiscount">-</strong>
-            </p>
+        <div class="section-title">
+            <h2>Recommendation Summary</h2>
+            <p>Distribution of recommended pricing strategies</p>
+        </div>
 
-            <p>
-                Medium Discount:
-                <strong id="mediumDiscount">-</strong>
-            </p>
+        <div class="summary-grid">
 
-            <p>
-                High Discount:
-                <strong id="highDiscount">-</strong>
-            </p>
+            <div class="summary-box">
+
+                <div class="summary-top">
+                    <span class="summary-name">Low Discount</span>
+                    <span class="summary-number" id="lowDiscount">-</span>
+                </div>
+
+                <div class="progress">
+                    <div class="progress-bar" id="lowProgress"></div>
+                </div>
+
+                <small>Recommended discount: 10%</small>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <div class="summary-top">
+                    <span class="summary-name">Medium Discount</span>
+                    <span class="summary-number" id="mediumDiscount">-</span>
+                </div>
+
+                <div class="progress">
+                    <div class="progress-bar" id="mediumProgress"></div>
+                </div>
+
+                <small>Recommended discount: 15%</small>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <div class="summary-top">
+                    <span class="summary-name">High Discount</span>
+                    <span class="summary-number" id="highDiscount">-</span>
+                </div>
+
+                <div class="progress">
+                    <div class="progress-bar" id="highProgress"></div>
+                </div>
+
+                <small>Recommended discount: 25%</small>
+
+            </div>
 
         </div>
 
-        <!-- Customer Search -->
-        <div class="search">
 
-            <input
-                type="number"
-                id="customerId"
-                placeholder="Enter Customer ID e.g. 10001"
-            >
+        <!-- Charts -->
 
-            <button onclick="getRecommendation()">
-                Get Recommendation
-            </button>
+        <div class="section-title">
+            <h2>Business Analytics</h2>
+            <p>Visual insights generated from the causal pricing analysis</p>
+        </div>
+
+
+        <div class="charts">
+
+            <div class="chart-card">
+
+                <h3>Recommendation Distribution</h3>
+
+                <p>
+                    Number of customers in each pricing strategy
+                </p>
+
+                <div class="chart-container">
+                    <canvas id="recommendationChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <div class="chart-card">
+
+                <h3>Treatment Effect Distribution</h3>
+
+                <p>
+                    Distribution of estimated causal treatment effects
+                </p>
+
+                <div class="chart-container">
+                    <canvas id="effectChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <div class="chart-card full">
+
+                <h3>Discount vs Average Sales</h3>
+
+                <p>
+                    Average sales observed at different discount levels
+                </p>
+
+                <div class="chart-container">
+                    <canvas id="salesChart"></canvas>
+                </div>
+
+            </div>
 
         </div>
+
+
+        <!-- Search -->
+
+        <div class="search-section">
+
+            <h2 class="search-title">
+                Customer Pricing Recommendation
+            </h2>
+
+            <p class="search-subtitle">
+                Enter a customer ID to generate a personalized causal pricing recommendation.
+            </p>
+
+            <div class="search">
+
+                <input
+                    type="number"
+                    id="customerId"
+                    placeholder="Enter Customer ID e.g. 10001"
+                >
+
+                <button
+                    id="recommendButton"
+                    onclick="getRecommendation()"
+                >
+                    Get Recommendation
+                </button>
+
+            </div>
+
+        </div>
+
 
         <div id="error" class="error"></div>
 
-        <!-- Customer Result -->
+
+        <!-- Result -->
+
         <div id="result" class="result">
+
+            <div class="customer-header">
+
+                <h2>Customer Details</h2>
+
+                <span>Personalized pricing analysis</span>
+
+            </div>
+
 
             <div class="grid">
 
@@ -298,15 +665,16 @@
 
             </div>
 
+
             <div class="recommendation">
 
                 <h3>Recommended Pricing Strategy</h3>
 
-                <h2 id="recommendation"></h2>
+                <h2 id="recommendation">-</h2>
 
                 <p class="recommended-discount">
                     Recommended Discount:
-                    <span id="recommendedDiscount"></span>
+                    <span id="recommendedDiscount">-</span>
                 </p>
 
             </div>
@@ -315,16 +683,37 @@
 
     </div>
 
+
+    <div class="footer">
+        EconoCausal • Dynamic Pricing using Double Machine Learning
+    </div>
+
 </div>
 
+
 <script>
+
+let recommendationChart;
+let effectChart;
+let salesChart;
+
+
+/* ================================
+   LOAD MAIN ANALYTICS
+================================ */
 
 async function loadAnalytics() {
 
     try {
 
         const response = await fetch("/analytics");
+
+        if (!response.ok) {
+            throw new Error("Analytics API failed");
+        }
+
         const data = await response.json();
+
 
         document.getElementById("totalCustomers").textContent =
             data.total_customers;
@@ -335,22 +724,212 @@ async function loadAnalytics() {
         document.getElementById("avgDiscount").textContent =
             Number(data.average_discount).toFixed(2) + "%";
 
-        document.getElementById("lowDiscount").textContent =
+
+        const low =
             data.recommendations["Low Discount"] || 0;
 
-        document.getElementById("mediumDiscount").textContent =
+        const medium =
             data.recommendations["Medium Discount"] || 0;
 
-        document.getElementById("highDiscount").textContent =
+        const high =
             data.recommendations["High Discount"] || 0;
 
-    } catch (err) {
 
-        console.error("Analytics loading failed:", err);
+        document.getElementById("lowDiscount").textContent = low;
+        document.getElementById("mediumDiscount").textContent = medium;
+        document.getElementById("highDiscount").textContent = high;
+
+
+        const total = low + medium + high;
+
+        if (total > 0) {
+
+            document.getElementById("lowProgress").style.width =
+                ((low / total) * 100) + "%";
+
+            document.getElementById("mediumProgress").style.width =
+                ((medium / total) * 100) + "%";
+
+            document.getElementById("highProgress").style.width =
+                ((high / total) * 100) + "%";
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Analytics loading failed:",
+            error
+        );
 
     }
 }
 
+
+/* ================================
+   LOAD CHARTS
+================================ */
+
+async function loadCharts() {
+
+    try {
+
+        const response = await fetch("/chart-data");
+
+        if (!response.ok) {
+            throw new Error("Chart API failed");
+        }
+
+        const data = await response.json();
+
+
+        /* Recommendation Chart */
+
+        const recommendationLabels = [
+            "Low Discount",
+            "Medium Discount",
+            "High Discount"
+        ];
+
+        const recommendationValues = [
+            data.recommendations["Low Discount"] || 0,
+            data.recommendations["Medium Discount"] || 0,
+            data.recommendations["High Discount"] || 0
+        ];
+
+
+        recommendationChart =
+            new Chart(
+                document.getElementById("recommendationChart"),
+                {
+                    type: "doughnut",
+
+                    data: {
+                        labels: recommendationLabels,
+
+                        datasets: [{
+                            data: recommendationValues
+                        }]
+                    },
+
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+
+                        plugins: {
+                            legend: {
+                                position: "bottom"
+                            }
+                        }
+                    }
+                }
+            );
+
+
+        /* Treatment Effect Chart */
+
+        const effectLabels =
+            data.treatment_effect.map(
+                item => item.range
+            );
+
+        const effectValues =
+            data.treatment_effect.map(
+                item => item.count
+            );
+
+
+        effectChart =
+            new Chart(
+                document.getElementById("effectChart"),
+                {
+                    type: "bar",
+
+                    data: {
+                        labels: effectLabels,
+
+                        datasets: [{
+                            label: "Customers",
+                            data: effectValues
+                        }]
+                    },
+
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            );
+
+
+        /* Discount vs Sales */
+
+        const salesLabels =
+            data.discount_sales.map(
+                item => item.discount + "%"
+            );
+
+        const salesValues =
+            data.discount_sales.map(
+                item => item.sales
+            );
+
+
+        salesChart =
+            new Chart(
+                document.getElementById("salesChart"),
+                {
+                    type: "line",
+
+                    data: {
+                        labels: salesLabels,
+
+                        datasets: [{
+                            label: "Average Sales",
+                            data: salesValues,
+                            tension: 0.3,
+                            fill: false
+                        }]
+                    },
+
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                }
+            );
+
+    } catch (error) {
+
+        console.error(
+            "Chart loading failed:",
+            error
+        );
+
+    }
+}
+
+
+/* ================================
+   CUSTOMER RECOMMENDATION
+================================ */
 
 async function getRecommendation() {
 
@@ -363,34 +942,61 @@ async function getRecommendation() {
     const result =
         document.getElementById("result");
 
+    const button =
+        document.getElementById("recommendButton");
+
+
+    error.style.display = "none";
+
+
     if (!customerId) {
 
         error.textContent =
             "Please enter a customer ID.";
+
+        error.style.display = "block";
 
         result.style.display = "none";
 
         return;
     }
 
+
     try {
 
-        const response = await fetch(
-            `/recommendation/${customerId}`
-        );
+        button.disabled = true;
+        button.textContent = "Analyzing...";
 
-        const data = await response.json();
+
+        const response =
+            await fetch(
+                `/recommendation/${customerId}`
+            );
+
+
+        if (!response.ok) {
+            throw new Error(
+                "Recommendation API failed"
+            );
+        }
+
+
+        const data =
+            await response.json();
+
 
         if (data.status === "error") {
 
-            error.textContent = data.message;
+            error.textContent =
+                data.message;
+
+            error.style.display = "block";
 
             result.style.display = "none";
 
             return;
         }
 
-        error.textContent = "";
 
         document.getElementById("customer").textContent =
             data.customer_id;
@@ -422,19 +1028,59 @@ async function getRecommendation() {
         document.getElementById("recommendedDiscount").textContent =
             data.recommended_discount + "%";
 
+
         result.style.display = "block";
 
-    } catch (err) {
+
+        result.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+
+    } catch (errorObject) {
+
+        console.error(
+            "Recommendation error:",
+            errorObject
+        );
 
         error.textContent =
-            "Unable to connect to the API.";
+            "Unable to connect to the API. Please try again.";
+
+        error.style.display = "block";
 
         result.style.display = "none";
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "Get Recommendation";
+
     }
 }
 
 
+/* Enter key */
+
+document
+    .getElementById("customerId")
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Enter") {
+                getRecommendation();
+            }
+
+        }
+    );
+
+
+/* Start */
+
 loadAnalytics();
+loadCharts();
 
 </script>
 
