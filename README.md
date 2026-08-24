@@ -54,3 +54,68 @@ The treatment variable is:
 
 ```text
 Discount
+The treatment represents the discount offered to a customer.
+
+### Outcome
+
+The outcome variable is:
+
+Sales
+
+The outcome represents customer sales after receiving a discount.
+
+### Confounders
+
+The model uses customer characteristics as confounders:
+
+- Age
+- Income
+- Previous Purchases
+- Gender
+
+These variables may influence both the discount received and customer sales.
+
+### Individual Treatment Effect (ITE)
+
+The Individual Treatment Effect estimates how much the treatment is expected to affect a specific customer.
+
+ITE = Expected Sales With Treatment - Expected Sales Without Treatment
+
+A positive ITE suggests that offering a discount is expected to increase sales.
+
+---
+
+## Project Workflow
+
+Customer Dataset
+↓
+Data Preprocessing
+↓
+Causal Model
+↓
+Double Machine Learning
+↓
+Treatment Effect Estimation
+↓
+Pricing Recommendation
+↓
+FastAPI Backend
+↓
+Analytics Dashboard
+
+---
+
+## Technology Stack
+
+- Python
+- Pandas
+- NumPy
+- Scikit-learn
+- EconML
+- DoWhy
+- FastAPI
+- Uvicorn
+- HTML
+- CSS
+- JavaScript
+- Chart.js
