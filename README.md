@@ -46,7 +46,7 @@ The system then uses this estimated treatment effect to recommend a suitable dis
 
 ---
 
-## 🧠 Key Concept
+## 🧠 Key Concepts
 
 ### Treatment
 
